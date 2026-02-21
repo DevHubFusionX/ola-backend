@@ -3,7 +3,7 @@
 // https://moderate-textile.onrender.com/api/health
 
 // You can also use UptimeRobot.com (free plan allows 50 monitors)
-// Add your server URL: https://moderate-textile.onrender.com
+// Add your server URL: https://ola-backend-vmxs.onrender.com
 
 console.log('Set up external monitoring at:');
 console.log('1. https://cron-job.org - Add URL: https://moderate-textile.onrender.com/api/health');

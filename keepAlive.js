@@ -1,10 +1,10 @@
 const https = require('https');
 
-const RENDER_URL = 'https://moderate-textile.onrender.com';
+const RENDER_URL = 'https://ola-backend-vmxs.onrender.com';
 
 function keepAlive() {
   const options = {
-    hostname: 'moderate-textile.onrender.com',
+    hostname: 'ola-backend-vmxs.onrender.com',
     port: 443,
     path: '/api/health',
     method: 'GET'
