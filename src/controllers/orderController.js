@@ -18,10 +18,15 @@ exports.createOrder = async (req, res) => {
         const receiptImage = req.file ? req.file.path : null;
         const receiptCloudinaryId = req.file ? req.file.public_id : null;
 
-        // Map items for the database (using only the product ID)
+        // Map items for the database
         const dbItems = items.map(item => ({
-            ...item,
-            product: (item.product && item.product._id) ? item.product._id : item.product
+            item: (item.product && item.product._id) ? item.product._id : item.product,
+            itemModel: item.itemType || 'Product',
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            color: item.color,
+            size: item.size
         }));
 
         const order = new Order({
@@ -75,7 +80,7 @@ exports.createOrder = async (req, res) => {
                                 ${items.map(item => `
                                     <tr>
                                         <td style="padding: 10px; border: 1px solid #f3e5d8;">
-                                            ${item.product.name || 'Product'} 
+                                            ${item.name || 'Product'} 
                                             <div style="font-size: 12px; color: #666;">
                                                 ${item.color ? `Color: ${item.color}` : ''} 
                                                 ${item.size ? `• Size: ${item.size}` : ''}
@@ -135,7 +140,7 @@ exports.createOrder = async (req, res) => {
 
 exports.getOrders = async (req, res) => {
     try {
-        const orders = await Order.find().populate('items.product').sort({ createdAt: -1 });
+        const orders = await Order.find().populate('items.item').sort({ createdAt: -1 });
         res.json(orders);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching orders', error: error.message });
@@ -144,7 +149,7 @@ exports.getOrders = async (req, res) => {
 
 exports.getOrderById = async (req, res) => {
     try {
-        const order = await Order.findById(req.params.id).populate('items.product');
+        const order = await Order.findById(req.params.id).populate('items.item');
         if (!order) {
             return res.status(404).json({ message: 'Order not found' });
         }

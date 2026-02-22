@@ -11,9 +11,18 @@ const orderSchema = new mongoose.Schema({
         country: { type: String, default: 'Nigeria' }
     },
     items: [{
-        product: {
+        item: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Product',
+            required: true,
+            refPath: 'items.itemModel'
+        },
+        itemModel: {
+            type: String,
+            required: true,
+            enum: ['Product', 'Combo']
+        },
+        name: {
+            type: String,
             required: true
         },
         quantity: {
