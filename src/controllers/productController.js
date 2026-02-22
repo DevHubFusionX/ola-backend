@@ -25,7 +25,7 @@ exports.getProductById = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
     try {
-        const { name, price, category, description, fabricType, texture, quality, care } = req.body;
+        const { name, price, category, description, material, fabricType, style, texture, quality, care } = req.body;
 
         const images = req.files && req.files.length > 0
             ? req.files.map(file => file.path)
@@ -40,8 +40,8 @@ exports.createProduct = async (req, res) => {
             price,
             category,
             description,
-            fabricType,
-            texture,
+            material: material || fabricType || '',
+            style: style || texture || '',
             quality,
             care,
             image: images[0],
@@ -60,7 +60,7 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, price, category, description, fabricType, texture, quality, care } = req.body;
+        const { name, price, category, description, material, fabricType, style, texture, quality, care } = req.body;
 
         const product = await Product.findById(id);
         if (!product) {
@@ -72,8 +72,8 @@ exports.updateProduct = async (req, res) => {
             price: price || product.price,
             category: category || product.category,
             description: description || product.description,
-            fabricType: fabricType || product.fabricType,
-            texture: texture || product.texture,
+            material: material || fabricType || product.material || product.fabricType,
+            style: style || texture || product.style || product.texture,
             quality: quality || product.quality,
             care: care || product.care
         };

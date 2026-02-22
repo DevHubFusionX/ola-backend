@@ -50,6 +50,12 @@ const orderSchema = new mongoose.Schema({
     orderNumber: {
         type: String,
         unique: true
+    },
+    receiptImage: {
+        type: String
+    },
+    receiptCloudinaryId: {
+        type: String
     }
 }, {
     timestamps: true

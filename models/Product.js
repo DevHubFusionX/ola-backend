@@ -13,7 +13,12 @@ const productSchema = new mongoose.Schema({
   category: {
     type: String,
     required: true,
-    enum: ['Traditional', 'Casual', 'Premium', 'Fabrics', 'Accessories']
+    enum: [
+      // New jewelry categories
+      'Jewelry', 'Chains', 'Watches', 'Bags', 'Hair Accessories', 'Earrings', 'Bracelets', 'Rings', 'Other',
+      // Legacy categories (backward compat with existing data)
+      'Traditional', 'Casual', 'Premium', 'Fabrics', 'Accessories'
+    ]
   },
   description: {
     type: String,
@@ -30,11 +35,11 @@ const productSchema = new mongoose.Schema({
     name: String,
     images: [String]
   }],
-  fabricType: {
+  material: {
     type: String,
     trim: true
   },
-  texture: {
+  style: {
     type: String,
     trim: true
   },
@@ -43,6 +48,15 @@ const productSchema = new mongoose.Schema({
     trim: true
   },
   care: {
+    type: String,
+    trim: true
+  },
+  // Keep old field for backward compat with existing data
+  fabricType: {
+    type: String,
+    trim: true
+  },
+  texture: {
     type: String,
     trim: true
   },

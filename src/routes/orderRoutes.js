@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const orderController = require('../controllers/orderController');
 
-// Public route for creating an order
-router.post('/', orderController.createOrder);
+const { upload } = require('../config/cloudinary');
+
+// Public route for creating an order - with receipt upload
+router.post('/', upload.single('receipt'), orderController.createOrder);
 
 // These would normally be protected by admin middleware
 router.get('/', orderController.getOrders);
