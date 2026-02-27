@@ -25,7 +25,7 @@ exports.getProductById = async (req, res) => {
 
 exports.createProduct = async (req, res) => {
     try {
-        const { name, price, category, description, material, fabricType, style, texture, quality, care } = req.body;
+        const { name, price, category, description, material, fabricType, style, texture, quality, care, colors } = req.body;
 
         const images = req.files && req.files.length > 0
             ? req.files.map(file => file.path)
@@ -34,6 +34,15 @@ exports.createProduct = async (req, res) => {
         const cloudinaryIds = req.files && req.files.length > 0
             ? req.files.map(file => file.public_id)
             : [];
+
+        let parsedColors = [];
+        if (colors) {
+            try {
+                parsedColors = JSON.parse(colors);
+            } catch (e) {
+                console.error('Error parsing colors:', e);
+            }
+        }
 
         const newProduct = new Product({
             name,
@@ -46,6 +55,7 @@ exports.createProduct = async (req, res) => {
             care,
             image: images[0],
             images,
+            colors: parsedColors,
             cloudinaryId: cloudinaryIds[0] || null,
             cloudinaryIds
         });
@@ -53,6 +63,7 @@ exports.createProduct = async (req, res) => {
         const savedProduct = await newProduct.save();
         res.json(savedProduct);
     } catch (error) {
+        console.error('Create product error:', error);
         res.status(500).json({ error: 'Failed to create product' });
     }
 };
@@ -60,7 +71,7 @@ exports.createProduct = async (req, res) => {
 exports.updateProduct = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, price, category, description, material, fabricType, style, texture, quality, care } = req.body;
+        const { name, price, category, description, material, fabricType, style, texture, quality, care, colors } = req.body;
 
         const product = await Product.findById(id);
         if (!product) {
@@ -77,6 +88,14 @@ exports.updateProduct = async (req, res) => {
             quality: quality || product.quality,
             care: care || product.care
         };
+
+        if (colors) {
+            try {
+                updateData.colors = JSON.parse(colors);
+            } catch (e) {
+                console.error('Error parsing colors:', e);
+            }
+        }
 
         if (req.files && req.files.length > 0 || req.body.keptImages) {
             let keptImages = [];
@@ -119,6 +138,7 @@ exports.updateProduct = async (req, res) => {
         const updatedProduct = await Product.findByIdAndUpdate(id, updateData, { new: true });
         res.json(updatedProduct);
     } catch (error) {
+        console.error('Update product error:', error);
         res.status(500).json({ error: 'Failed to update product' });
     }
 };

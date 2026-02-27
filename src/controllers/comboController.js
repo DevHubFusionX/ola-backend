@@ -26,7 +26,7 @@ exports.getComboById = async (req, res) => {
 
 exports.createCombo = async (req, res) => {
     try {
-        const { name, description, products, originalPrice, comboPrice, savings, popular } = req.body;
+        const { name, description, products, originalPrice, comboPrice, savings, popular, colors } = req.body;
 
         const images = req.files && req.files.length > 0
             ? req.files.map(file => file.path)
@@ -45,7 +45,8 @@ exports.createCombo = async (req, res) => {
             savings,
             images,
             cloudinaryIds,
-            popular: popular === 'true'
+            popular: popular === 'true',
+            colors: colors ? JSON.parse(colors) : []
         });
 
         const savedCombo = await newCombo.save();
@@ -59,7 +60,7 @@ exports.createCombo = async (req, res) => {
 exports.updateCombo = async (req, res) => {
     try {
         const { id } = req.params;
-        const { name, description, products, originalPrice, comboPrice, savings, popular } = req.body;
+        const { name, description, products, originalPrice, comboPrice, savings, popular, colors } = req.body;
 
         const combo = await Combo.findById(id);
         if (!combo) {
@@ -73,7 +74,8 @@ exports.updateCombo = async (req, res) => {
             originalPrice: originalPrice || combo.originalPrice,
             comboPrice: comboPrice || combo.comboPrice,
             savings: savings || combo.savings,
-            popular: popular !== undefined ? popular === 'true' : combo.popular
+            popular: popular !== undefined ? popular === 'true' : combo.popular,
+            colors: colors ? JSON.parse(colors) : combo.colors
         };
 
         if (req.files && req.files.length > 0 || req.body.keptImages) {

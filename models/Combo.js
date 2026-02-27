@@ -37,7 +37,11 @@ const comboSchema = new mongoose.Schema({
   popular: {
     type: Boolean,
     default: false
-  }
+  },
+  colors: [{
+    name: String,
+    images: [String]
+  }]
 }, {
   timestamps: true
 });
