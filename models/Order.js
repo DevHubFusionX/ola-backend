@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const orderSchema = new mongoose.Schema({
     customer: {
         name: { type: String, required: true },
-        email: { type: String, required: true },
+        email: { type: String, default: '' },
         phone: { type: String, required: true },
         address: { type: String, required: true },
         city: { type: String, required: true },
@@ -43,12 +43,12 @@ const orderSchema = new mongoose.Schema({
     },
     paymentMethod: {
         type: String,
-        enum: ['Bank Transfer', 'On Delivery'],
+        enum: ['Bank Transfer', 'On Delivery', 'WhatsApp Booking'],
         default: 'Bank Transfer'
     },
     deliveryMethod: {
         type: String,
-        enum: ['Standard', 'Express', 'Pickup'],
+        enum: ['Standard', 'Express', 'Pickup', 'WhatsApp Coordination'],
         default: 'Standard'
     },
     status: {
