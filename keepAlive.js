@@ -7,7 +7,8 @@ function keepAlive() {
     hostname: 'ola-backend-vmxs.onrender.com',
     port: 443,
     path: '/api/health',
-    method: 'GET'
+    method: 'GET',
+    timeout: 10000
   };
 
   const req = https.request(options, (res) => {
@@ -15,15 +16,27 @@ function keepAlive() {
   });
 
   req.on('error', (error) => {
-    console.error('Keep-alive error:', error.message);
+    console.error(`Keep-alive error: ${error.message} at ${new Date().toISOString()}`);
+  });
+
+  req.on('timeout', () => {
+    req.destroy();
+    console.error(`Keep-alive timeout at ${new Date().toISOString()}`);
   });
 
   req.end();
 }
 
-// Ping every 14 minutes (840 seconds)
-setInterval(keepAlive, 14 * 60 * 1000);
+// Ping every 10 minutes (600 seconds) to prevent sleep
+// 10 minutes is safer than 14 for Render's 15-minute timeout
+const INTERVAL = 10 * 60 * 1000;
 
-console.log('Keep-alive service started - pinging every 14 minutes');
+// Initial ping on startup
+keepAlive();
+
+// Set up recurring ping
+setInterval(keepAlive, INTERVAL);
+
+console.log(`Keep-alive service started - pinging ${RENDER_URL} every 10 minutes`);
 
 module.exports = keepAlive;
